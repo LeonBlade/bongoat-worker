@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "bongoat-wrangler",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-06-19",
+  "observability": {
+    "enabled": true
+  },
+  "dev": {
+    "ip": "0.0.0.0"
+  }
+}
