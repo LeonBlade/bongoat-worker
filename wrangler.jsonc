@@ -1,8 +1,9 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "bongoat-wrangler",
-  "main": "src/index.ts",
-  "compatibility_date": "2025-06-19",
+  "main": "src/server.ts",
+  "compatibility_date": "2025-06-21",
+  "compatibility_flags": ["nodejs_compat"],
   "observability": {
     "enabled": true
   },
