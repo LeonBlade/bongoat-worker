@@ -1,6 +1,5 @@
 import {
   SlashCommandBuilder,
-  EmbedBuilder,
   ContainerBuilder,
   TextDisplayBuilder,
   ButtonBuilder,
@@ -13,12 +12,6 @@ import {
 } from 'discord.js';
 
 export const command = new SlashCommandBuilder().setName('embed').setDescription('Creates the whitelist embed.');
-
-export const embed = new EmbedBuilder()
-  .setTitle('Join the Minecraft Server')
-  .setDescription(
-    "Before you join, make sure you **read the rules**! Once you've read the rules, you can click on the button below to gain access to the server.\n\nIn order to join, make sure you have your Minecraft username ready to go! Don't know what it is? Head on over to the [Minecraft website](https://www.minecraft.net/msaprofile/mygames/editprofile) and log in. \n\nYou should be able to see your \"Java Profile Name\". This is what you'll enter in to gain access to the server! You can also change it from this page if you want.\n\nReady to join? Click the button below and fill in your username! \n\nNeed help? Reach out to <@59388399135498240> or another <@&817308020962230272> for assistance.",
-  );
 
 const markdown = new TextDisplayBuilder().setContent(`
 ## Join Yuchi's Minecraft Server
@@ -54,3 +47,8 @@ export async function execute(): Promise<Response> {
 
   return response;
 }
+
+export default {
+  command,
+  execute,
+};

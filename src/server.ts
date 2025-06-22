@@ -2,28 +2,36 @@ import { AutoRouter } from 'itty-router';
 import { verifyKey } from 'discord-interactions';
 import { APIInteraction, InteractionResponseType, InteractionType } from 'discord.js';
 
-import { command, execute } from './commands';
+import { DiscordCommand } from './commands/command';
 
 const router = AutoRouter();
 
 router.post('/', async (request, env: Env) => {
+  // Verify our request is valid via the signature attached
   const { isValid, interaction } = await verifyDiscordRequest(request, env);
   if (!isValid || !interaction) {
     return new Response('Bad request signature.', { status: 401 });
   }
 
+  // Process ping/pong
   if (interaction.type === InteractionType.Ping) {
     return Response.json({ type: InteractionResponseType.Pong });
   }
 
+  // Process commands
   if (interaction.type === InteractionType.ApplicationCommand) {
-    switch (interaction.data.name.toLowerCase()) {
-      case command.name.toLowerCase(): {
-        // Execute our command!
-        return execute();
-        break;
-      }
+    const response = DiscordCommand.execute(interaction);
+    if (!response) {
+      console.warn(`Unhandled interaction: ${interaction.data.name.toLowerCase()}`);
     }
+    return response;
+  }
+
+  // Process component interactions
+  if (interaction.type === InteractionType.MessageComponent) {
+    console.log(
+      `Interaction fired! User: ${interaction.member}, Component Type: ${interaction.data.component_type}, Component ID: ${interaction.data.custom_id}`,
+    );
   }
 });
 
