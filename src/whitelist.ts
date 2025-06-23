@@ -11,12 +11,15 @@ export async function whitelist(username: string, env: Env, remove?: boolean): P
 
   // In case we're removing a user instead of adding, we don't really care about the response
   if (remove) {
+    console.log('removing user');
     await client.query(`whitelist remove ${username}`);
     return { success: true };
   }
 
   const response = await client.query(`whitelist add ${username}`);
   client.disconnect();
+
+  console.log('rcon res', response);
 
   if (response.toLowerCase() !== `added ${username.toLowerCase()} to the whitelist`) {
     console.error('Error:', response);
