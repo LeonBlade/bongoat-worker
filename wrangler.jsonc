@@ -7,6 +7,12 @@
   "observability": {
     "enabled": true
   },
+  "kv_namespaces": [
+    {
+      "binding": "WHITELIST",
+      "id": "fd9b50a7d36d4c71982c4ba559616573"
+    }
+  ],
   "dev": {
     "ip": "0.0.0.0"
   }

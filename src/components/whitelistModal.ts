@@ -88,6 +88,17 @@ export class WhitelistModalResponse implements InteractionExecute<APIModalSubmit
       return;
     }
 
+    // Get the Discord User ID
+    const userId = interaction.member.user.id;
+
+    // Check the KV for the user already existing
+    const entry = await env.WHITELIST.get(userId);
+    if (entry) {
+      // Remove their existing username first
+      await whitelist(username, env, true);
+      await env.WHITELIST.delete(userId);
+    }
+
     // Calculate the difference of the join date and today
     const daysInMs = 1000 * 60 * 60 * 24;
     const difference = new Date().getTime() - new Date(interaction.member.joined_at).getTime();
@@ -116,6 +127,9 @@ export class WhitelistModalResponse implements InteractionExecute<APIModalSubmit
         `Whitelist was partially unsuccessful. Role was not added successfully. Please reach out to a moderator for assistance.`,
       );
     }
+
+    // Add them to the KV
+    env.WHITELIST.put(userId, username);
 
     // Update the deferred message
     updateDeferred(`You've been successfully whitelisted to the server!`);
