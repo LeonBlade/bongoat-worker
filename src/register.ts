@@ -1,9 +1,9 @@
 import dotenvx from '@dotenvx/dotenvx';
 
-import { REST } from '@discordjs/rest';
-import { RESTPostAPIApplicationGuildCommandsJSONBody, Routes } from 'discord.js';
+import { APIApplicationCommandInteraction, InteractionType, REST, RESTPutAPIApplicationGuildCommandsJSONBody, Routes } from 'discord.js';
 
-import { command } from './commands';
+import { Interactions } from './interactions';
+import { DiscordCommand } from './commands';
 
 dotenvx.config({ path: '.dev.vars' });
 
@@ -26,9 +26,14 @@ if (!guildId) {
 const rest = new REST({ version: '10' }).setToken(token);
 
 try {
+  // Init the interactions
+  Interactions.initialize();
+  // Get comands from the interactions
+  const commands = Interactions.get<APIApplicationCommandInteraction>(InteractionType.ApplicationCommand);
+
   // Register the command with the guild
-  await rest.post(Routes.applicationGuildCommands(applicationId, guildId), {
-    body: command.toJSON() satisfies RESTPostAPIApplicationGuildCommandsJSONBody,
+  await rest.put(Routes.applicationGuildCommands(applicationId, guildId), {
+    body: commands?.map((command) => (command as DiscordCommand).getBuilder().toJSON()) as RESTPutAPIApplicationGuildCommandsJSONBody,
   });
 } catch (error) {
   console.error(error);

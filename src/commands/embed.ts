@@ -10,6 +10,10 @@ import {
 } from 'discord.js';
 import { DiscordCommand } from './command';
 
+export const ids = {
+  embed: 'whitelist',
+};
+
 export class EmbedCommand extends DiscordCommand {
   constructor() {
     super('embed', 'Creates the whitelist message and button.');
@@ -29,11 +33,11 @@ Ready to join? Click the button below and fill in your username!
 
 Need help? Reach out to <@59388399135498240> or another <@&817308020962230272> for assistance.`);
 
-    const joinButton = new ButtonBuilder().setCustomId('whitelist').setLabel('Join Server').setStyle(ButtonStyle.Primary);
+    const joinButton = new ButtonBuilder().setCustomId(ids.embed).setLabel('Join Server').setStyle(ButtonStyle.Primary);
 
     const actionRow = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(joinButton);
 
-    const component = new ContainerBuilder().setAccentColor(0x00ddff).addTextDisplayComponents(markdown).addActionRowComponents(actionRow);
+    const component = new ContainerBuilder().setAccentColor(0x9ac2ff).addTextDisplayComponents(markdown).addActionRowComponents(actionRow);
 
     return {
       flags: MessageFlags.IsComponentsV2,

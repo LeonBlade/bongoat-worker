@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@discordjs/rest':
-        specifier: ^2.5.1
-        version: 2.5.1
       '@dotenvx/dotenvx':
         specifier: ^1.45.1
         version: 1.45.1
@@ -23,6 +20,9 @@ importers:
       itty-router:
         specifier: ^5.0.18
         version: 5.0.18
+      minecraft-rcon-client:
+        specifier: ^3.0.0
+        version: 3.0.0
     devDependencies:
       '@cloudflare/vitest-pool-workers':
         specifier: ^0.8.43
@@ -1515,6 +1515,9 @@ packages:
   mimic-fn@2.1.0:
     resolution: {integrity: sha512-OqbOk5oEQeAZ8WXWydlu9HJjz9WVdEIvamMCcXmuqUYjTknH/sqsWvhQ3vgwKFRR1HpjvNBKQ37nbJgYzGqGcg==}
     engines: {node: '>=6'}
+
+  minecraft-rcon-client@3.0.0:
+    resolution: {integrity: sha512-Qbf7FEQ5mJa4L5knxOSJKZH4JSmEFOyIbqzUjaHVSiQMMyJvMcXL8ufL/wWJ2Sbj3Pv2cvsKWzY7qcWn7t8oAw==}
 
   miniflare@4.20250617.3:
     resolution: {integrity: sha512-j+LZycT11UdlVeNdaqD0XdNnYnqAL+wXmboz+tNPFgTq6zhD489Ujj3BfSDyEHDCA9UFBLbkc5ByGWBh+pYZ5Q==}
@@ -3204,6 +3207,8 @@ snapshots:
   mime@3.0.0: {}
 
   mimic-fn@2.1.0: {}
+
+  minecraft-rcon-client@3.0.0: {}
 
   miniflare@4.20250617.3:
     dependencies:

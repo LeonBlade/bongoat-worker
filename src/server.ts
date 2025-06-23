@@ -1,12 +1,14 @@
 import { AutoRouter } from 'itty-router';
 import { verifyKey } from 'discord-interactions';
 import { APIInteraction, InteractionResponseType, InteractionType } from 'discord.js';
-
-import { DiscordCommand } from './commands/command';
+import { Interactions } from './interactions';
 
 const router = AutoRouter();
 
-router.post('/', async (request, env: Env) => {
+// Load the comamnds and interactions
+Interactions.initialize();
+
+router.post('/', async (request, env: Env, ctx: ExecutionContext) => {
   // Verify our request is valid via the signature attached
   const { isValid, interaction } = await verifyDiscordRequest(request, env);
   if (!isValid || !interaction) {
@@ -18,21 +20,13 @@ router.post('/', async (request, env: Env) => {
     return Response.json({ type: InteractionResponseType.Pong });
   }
 
-  // Process commands
-  if (interaction.type === InteractionType.ApplicationCommand) {
-    const response = DiscordCommand.execute(interaction);
-    if (!response) {
-      console.warn(`Unhandled interaction: ${interaction.data.name.toLowerCase()}`);
-    }
+  // Execute across all of our interactions
+  const response = Interactions.execute(interaction, env, ctx);
+  if (response) {
     return response;
   }
 
-  // Process component interactions
-  if (interaction.type === InteractionType.MessageComponent) {
-    console.log(
-      `Interaction fired! User: ${interaction.member}, Component Type: ${interaction.data.component_type}, Component ID: ${interaction.data.custom_id}`,
-    );
-  }
+  console.log('Unhandled interaction', interaction.type, JSON.stringify(interaction.data, null, 2));
 });
 
 async function verifyDiscordRequest(request: Request, env: Env) {
