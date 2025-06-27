@@ -94,15 +94,19 @@ export class WhitelistModalResponse implements InteractionExecute<APIModalSubmit
     // Get the Discord User ID
     const userId = interaction.member.user.id;
 
+    console.log(`Discord User ${userId} has requested to whitelist...`);
+
     // Check the KV for the user already existing
     const entry = await env.WHITELIST.get(userId);
     if (entry) {
-      console.log('Existing user found...');
+      console.error('Existing user found, jumping off here!');
       return `You already have a Minecraft account registered with the server. If you need to change your username, or are encountering other problems, please reach out to a moderator.`;
       // Remove their existing username first
       // await whitelist(username, env, true);
       // await env.WHITELIST.delete(userId);
     }
+
+    console.log(`User not found in the KV list.`);
 
     // Calculate the difference of the join date and today
     const daysInMs = 1000 * 60 * 60 * 24;
@@ -111,41 +115,44 @@ export class WhitelistModalResponse implements InteractionExecute<APIModalSubmit
 
     // Not allowed in the server
     if (days < 10) {
+      console.error(`User has not been on the server long enough, found ${days} day(s) on server`);
       return updateDeferred(
         `Thank you for your interest. Unfortuantely, we cannot add you to the server at this time. If you feel there's been a mistake, please reach out to one of the moderators.`,
       );
     }
 
-    console.log('More than 10 days found', days);
+    console.log('More than 10 days found:', days);
 
     // RCON the whitelist command to the server
     const status = await whitelist(username, env);
-    console.log(status);
+    console.log('RCON:', status);
     if (!status.success) {
+      console.error('Failed to whitelist this user:', status.error);
       return updateDeferred(
         status.error ||
           `We're unable to whitelist any user with this name. Please check your Minecraft username again. If this error continues to occur, please contact one of the moderators.`,
       );
     }
 
-    console.log('Successfully whitelisted on the server via RCON');
+    console.log('Successfully whitelisted on the server via RCON!');
 
     try {
       await rest.put(Routes.guildMemberRole(env.DISCORD_GUILD_ID, interaction.member.user?.id, env.DISCORD_WHITELISTED_ROLE));
-    } catch {
+    } catch (error) {
+      console.error(`Error occured while attempting to grant user role on Discord`, error);
       return updateDeferred(
         `Whitelist was partially unsuccessful. Role was not added successfully. Please reach out to a moderator for assistance.`,
       );
     }
 
-    console.log('Added discord role');
+    console.log('Added Discord role successfully!');
 
     // Add them to the KV
     await env.WHITELIST.put(userId, username);
 
-    console.log('Set the KV');
+    console.log('User added in KV');
 
-    console.log('Finished with verifying user!');
+    console.log('User has been fully whitelisted!');
 
     // Update the deferred message
     return updateDeferred(`You've been successfully whitelisted to the server!`);

@@ -26,7 +26,7 @@ router.post('/', async (request, env: Env, ctx: ExecutionContext) => {
     return response;
   }
 
-  console.log('Unhandled interaction', interaction.type, JSON.stringify(interaction.data, null, 2));
+  console.warn('Unhandled interaction', interaction.type, JSON.stringify(interaction.data, null, 2));
 });
 
 async function verifyDiscordRequest(request: Request, env: Env) {
